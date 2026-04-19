@@ -52,7 +52,8 @@ python main.py
 
 
 ## CÁC HÌNH MINH HỌA SƠ BỘ VỀ HỆ THỐNG
-<img width="972" height="633" alt="Screenshot 2026-04-16 214457" src="https://github.com/user-attachments/assets/74e157dd-4d0a-4ee4-8b35-35c614839e28" />
+
+<img width="975" height="637" alt="3mat" src="https://github.com/user-attachments/assets/0f5b6372-bc7d-4e40-a970-b42e3db3386d" />
 
 <img width="970" height="635" alt="2mat" src="https://github.com/user-attachments/assets/f3736299-065f-467d-8568-838eba802653" />
 
