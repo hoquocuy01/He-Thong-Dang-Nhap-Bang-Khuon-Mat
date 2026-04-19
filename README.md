@@ -1,6 +1,8 @@
 ## PHẦN 1: THÔNG TIN SINH VIÊN
-* **Họ và tên:** [Điền Tên Bạn]
-* **Lớp:** [Điền Tên Lớp]
+* **Họ và tên:** : Hồ Quốc Uy
+* **Họ và tên:** : Vũ Bình Minh
+* **Họ và tên:** : Hoàng Mạnh Cương
+* **Lớp:** CNTT4.K25
 * **Đề tài:** Hệ thống đăng nhập bằng nhận diện khuôn mặt thời gian thực.
 * **Công nghệ sử dụng:** `Python`, `OpenCV`, `Face_Recognition`, `MySQL (XAMPP)`.
 
@@ -8,7 +10,7 @@
 ## PHẦN 2: HƯỚNG DẪN CÀI ĐẶT & THỰC NGHIỆM
 
 ### 1. Chuẩn bị môi trường hệ thống
-Để chạy được các thư viện AI, máy tính cần cài đặt các công cụ biên dịch:
+Để chạy được các thư viện cần cài đặt các công cụ biên dịch:
 * **CMake**: Hỗ trợ biên dịch mã nguồn xử lý khuôn mặt.
 * **Visual Studio C++ Desktop Development**: Cung cấp trình biên dịch cho thư viện `Dlib`.
 
