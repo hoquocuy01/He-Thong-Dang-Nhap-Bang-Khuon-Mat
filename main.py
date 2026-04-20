@@ -51,12 +51,13 @@ class LoginSystem:
 
     def loginEmployee(self):
         self.clearScreen()
-        self.logged_in_name = "Unknown" # Reset tên trước khi quét
+        self.logged_in_name = "Unknown" 
 
-        # Phát âm thanh chào mừng
-        process = self.playVoice("Voices/voice1.mp3")
-        time.sleep(2) 
-        process.terminate()
+        # Phát âm thanh chào mừng (Chạy ngầm, không chặn luồng chính)
+        self.playVoice("Voices/voice1.mp3")
+        
+        # Không dùng time.sleep và terminate ở đây nữa để tránh ngắt giọng
+        # Hệ thống sẽ bắt đầu nạp dữ liệu khuôn mặt ngay khi tiếng nói đang phát
         
         faces = vs.encode_faces()
         encoded_faces = list(faces.values())
@@ -71,7 +72,6 @@ class LoginSystem:
                 break
             else :
                 frame = video_stream.read()
-
                 if video_frame:
                     face_locations = f.face_locations(frame)
                     unknown_face_encodings = f.face_encodings(frame, face_locations)
@@ -80,23 +80,17 @@ class LoginSystem:
                     for face_encoding in unknown_face_encodings:
                         matches = f.compare_faces(encoded_faces, face_encoding)
                         name = "Unknown"
-
                         face_distances = f.face_distance(encoded_faces, face_encoding)
                         best_match_index = np.argmin(face_distances)
                         if matches[best_match_index]:
                             name = faces_name[best_match_index]
-
                         face_names.append(name)
 
                 video_frame = not video_frame
 
                 for (top, right, bottom, left), faceID in zip(face_locations, face_names):
                     cv2.rectangle(frame, (left-20, top-20), (right+20, bottom+20), (0, 255, 0), 2)
-                    cv2.rectangle(frame, (left-20, bottom -15), (right+20, bottom+20), (0, 255, 0), cv2.FILLED)
-                    font = cv2.FONT_HERSHEY_DUPLEX
-                    cv2.putText(frame, "Da Phat Hien", (left -20, bottom + 15), font, 0.85, (255, 255, 255), 2)
-                    
-                    # Cập nhật: Nhận trạng thái và tên từ DB
+                    cv2.putText(frame, "Da Phat Hien", (left -20, bottom + 15), cv2.FONT_HERSHEY_DUPLEX, 0.85, (255, 255, 255), 2)
                     self.status, self.logged_in_name = self.isPresent(faceID)
 
             cv2.imshow('Nhan Dien Khuon Mat - Nhan Q de thoat' , frame)
@@ -107,12 +101,20 @@ class LoginSystem:
         cv2.destroyAllWindows()
 
         if self.status:
-            process = self.playVoice("Voices/voice2.mp3")
-            time.sleep(2)
-            process.terminate()
-            self.employeeEntered(self.logged_in_name) # Truyền tên vào hàm hiển thị
+            # Phát âm thanh thông báo thành công
+            self.playVoice("Voices/voice2.mp3")
+            # Chuyển màn hình kết quả
+            self.employeeEntered(self.logged_in_name) 
         else:
             self.clearScreen()
+
+    def playVoice(self, voice):
+        # Tạo một tiến trình riêng để chạy playsound
+        # Tiến trình này sẽ tự kết thúc khi file âm thanh chạy hết
+        process = mp.Process(target=playsound, args=(voice,))
+        process.daemon = True # Đảm bảo âm thanh tắt nếu bạn đóng ứng dụng chính
+        process.start()
+        # Không return process để tránh việc gọi terminate nhầm lẫn ở nơi khác
 
     def isPresent(self, UID):
         try:
@@ -126,7 +128,7 @@ class LoginSystem:
             if row == None:
                 return False, "Unknown"
             else:
-                full_name = f"{row[1]} {row[0]}" # Ghép Họ + Tên
+                full_name = f"{row[0]} {row[1]}" # Ghép Họ + Tên
                 return True, full_name
         except Exception as e:
             return False, "Error"
